@@ -30,26 +30,35 @@ public class ingestionServiceRunner {
         ir.setSor(sor);
         ir.setSubjectArea(subjectArea);
         JsonNode dataSourceNode=configNode.path(MetaConfigConst.dataSource);
+        JsonNode dsDbConnNode=dataSourceNode.path(MetaConfigConst.dsDBConn);
         JsonNode dsDBsNode =dataSourceNode.path(MetaConfigConst.dsDBs);
         JsonNode dsFilesNode=dataSourceNode.path(MetaConfigConst.dsFiles);
         JsonNode dsQueriesNode=dataSourceNode.path(MetaConfigConst.dsQueries);
         JsonNode stagingNode=configNode.path(MetaConfigConst.staging);
         JsonNode dataTargetNode=configNode.path(MetaConfigConst.dataTargets);
         JsonNode sparkConfigParamsNode=configNode.path(MetaConfigConst.sparkConfigParams);
+        //dsDBConnection
+        if (!dsDbConnNode.isMissingNode()){
+            dsDbConnRequest dsDBConn=new dsDbConnRequest();
+            dsDBConn.setConnectionString(dsDbConnNode.path(MetaConfigConst.connectionString).asText());
+            dsDBConn.setSourceDBType(dsDbConnNode.path(MetaConfigConst.sourceDBType).asText());
+            dsDBConn.setUserLogin(dsDbConnNode.path(MetaConfigConst.userLogin).asText());
+            ir.setDsDbConn(dsDBConn);
+        }
         //dsDBs
         if(!dsDBsNode.isMissingNode()){
-            List <dsDdbRequest> dsDdbRequests=new ArrayList<>();
+            List <dsDbRequest> dsDbRequests =new ArrayList<>();
             for(JsonNode dsDBNodeObj: dsDBsNode){
                 JsonNode dsDBNode=dsDBNodeObj.path(MetaConfigConst.dsDB);
-                dsDdbRequest dsDB=new dsDdbRequest();
+                dsDbRequest dsDB=new dsDbRequest();
                 dsDB.setBatchSize(dsDBNode.path(MetaConfigConst.batchSize).asInt());
-                dsDB.setConnectionString(dsDBNode.path(MetaConfigConst.connectionString).asText());
+
                 dsDB.setDataFrameName(dsDBNode.path(MetaConfigConst.dataFrameName).asText());
                 dsDB.setDbQuery(dsDBNode.path(MetaConfigConst.dbQuery).asText());
-                dsDB.setSourceDBType(dsDBNode.path(MetaConfigConst.sourceDBType).asText());
-                dsDdbRequests.add(dsDB);
+
+                dsDbRequests.add(dsDB);
             }
-            ir.setDsDBs(dsDdbRequests);
+            ir.setDsDBs(dsDbRequests);
         }
         //dsFiles
         if(!dsFilesNode.isMissingNode()){

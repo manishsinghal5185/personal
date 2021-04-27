@@ -1,10 +1,9 @@
 package com.capgemini.commons;
 
-public class dsDdbRequest {
+public class dsDbRequest {
     String dbQuery;
     String dataFrameName;
-    String sourceDBType;
-    String connectionString;
+
     Integer batchSize;
 
     public String getDbQuery() {
@@ -21,22 +20,6 @@ public class dsDdbRequest {
 
     public void setDataFrameName(String dataFrameName) {
         this.dataFrameName = dataFrameName;
-    }
-
-    public String getSourceDBType() {
-        return sourceDBType;
-    }
-
-    public void setSourceDBType(String sourceDBType) {
-        this.sourceDBType = sourceDBType;
-    }
-
-    public String getConnectionString() {
-        return connectionString;
-    }
-
-    public void setConnectionString(String connectionString) {
-        this.connectionString = connectionString;
     }
 
     public Integer getBatchSize() {

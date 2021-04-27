@@ -8,6 +8,8 @@ public class MetaConfigConst {
     public static final String dataSource="dataSource";
     public static final String dsDB="dsDB";
     public static final String dsDBs="dsDBs";
+    public static final String dsDBConn="dsDBConn";
+    public static final String userLogin="userLogin";
     public static final String dbQuery="dbQuery";
     public static final String dataFrameName="dataFrameName";
     public static final String sourceDBType="sourceDBType";

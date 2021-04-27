@@ -7,7 +7,8 @@ public class ingestionRequest {
     private String sor;
     private String appId;
     private String subjectArea;
-    private List<dsDdbRequest> dsDBs;
+    private dsDbConnRequest dsDbConn;
+    private List<dsDbRequest> dsDBs;
     private List <dsFileRequest> dsFiles;
     private List <dsQueryRequest> dsQueries;
     private List <dataTarget> dataTargets;
@@ -55,11 +56,11 @@ public class ingestionRequest {
         this.subjectArea = subjectArea;
     }
 
-    public List<dsDdbRequest> getDsDBs() {
+    public List<dsDbRequest> getDsDBs() {
         return dsDBs;
     }
 
-    public void setDsDBs(List<dsDdbRequest> dsDBs) {
+    public void setDsDBs(List<dsDbRequest> dsDBs) {
         this.dsDBs = dsDBs;
     }
 
@@ -101,5 +102,14 @@ public class ingestionRequest {
 
     public void setStagingPartitions(List<String> stagingPartitions) {
         this.stagingPartitions = stagingPartitions;
+    }
+
+
+    public dsDbConnRequest getDsDbConn() {
+        return dsDbConn;
+    }
+
+    public void setDsDbConn(dsDbConnRequest dsDbConn) {
+        this.dsDbConn = dsDbConn;
     }
 }
