@@ -1,0 +1,105 @@
+package com.capgemini.commons;
+
+import java.util.List;
+
+public class ingestionRequest {
+    private String appName;
+    private String sor;
+    private String appId;
+    private String subjectArea;
+    private List<dsDdbRequest> dsDBs;
+    private List <dsFileRequest> dsFiles;
+    private List <dsQueryRequest> dsQueries;
+    private List <dataTarget> dataTargets;
+    private String  stagingLoc;
+    private List <String> stagingPartitions;
+    private List <sparkConfigParam>  sparkConfigParams;
+
+    public List<sparkConfigParam> getSparkConfigParams() {
+        return sparkConfigParams;
+    }
+
+    public void setSparkConfigParams(List<sparkConfigParam> sparkConfigParams) {
+        this.sparkConfigParams = sparkConfigParams;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+    public String getSor() {
+        return sor;
+    }
+
+    public void setSor(String sor) {
+        this.sor = sor;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getSubjectArea() {
+        return subjectArea;
+    }
+
+    public void setSubjectArea(String subjectArea) {
+        this.subjectArea = subjectArea;
+    }
+
+    public List<dsDdbRequest> getDsDBs() {
+        return dsDBs;
+    }
+
+    public void setDsDBs(List<dsDdbRequest> dsDBs) {
+        this.dsDBs = dsDBs;
+    }
+
+    public List<dsFileRequest> getDsFiles() {
+        return dsFiles;
+    }
+
+    public void setDsFiles(List<dsFileRequest> dsFiles) {
+        this.dsFiles = dsFiles;
+    }
+
+    public List<dsQueryRequest> getDsQueries() {
+        return dsQueries;
+    }
+
+    public void setDsQueries(List<dsQueryRequest> dsQueries) {
+        this.dsQueries = dsQueries;
+    }
+
+    public List<dataTarget> getDataTargets() {
+        return dataTargets;
+    }
+
+    public void setDataTargets(List<dataTarget> dataTargets) {
+        this.dataTargets = dataTargets;
+    }
+
+    public String getStagingLoc() {
+        return stagingLoc;
+    }
+
+    public void setStagingLoc(String stagingLoc) {
+        this.stagingLoc = stagingLoc;
+    }
+
+    public List<String> getStagingPartitions() {
+        return stagingPartitions;
+    }
+
+    public void setStagingPartitions(List<String> stagingPartitions) {
+        this.stagingPartitions = stagingPartitions;
+    }
+}
