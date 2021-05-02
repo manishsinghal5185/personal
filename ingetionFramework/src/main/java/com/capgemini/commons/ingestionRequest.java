@@ -1,6 +1,7 @@
 package com.capgemini.commons;
 
 import java.util.List;
+import java.util.Map;
 
 public class ingestionRequest {
     private String appName;
@@ -15,6 +16,7 @@ public class ingestionRequest {
     private String  stagingLoc;
     private List <String> stagingPartitions;
     private List <sparkConfigParam>  sparkConfigParams;
+    private List<Map<String,String>> cmdLineParameters;
 
     public List<sparkConfigParam> getSparkConfigParams() {
         return sparkConfigParams;
@@ -111,5 +113,13 @@ public class ingestionRequest {
 
     public void setDsDbConn(dsDbConnRequest dsDbConn) {
         this.dsDbConn = dsDbConn;
+    }
+
+    public List<Map<String, String>> getCmdLineParameters() {
+        return cmdLineParameters;
+    }
+
+    public void setCmdLineParameters(List<Map<String, String>> cmdLineParameters) {
+        this.cmdLineParameters = cmdLineParameters;
     }
 }

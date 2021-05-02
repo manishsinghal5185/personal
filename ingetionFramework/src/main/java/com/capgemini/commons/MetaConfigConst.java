@@ -41,4 +41,16 @@ public class MetaConfigConst {
     public static final String sparkConfigName="sparkConfigName";
     public static final String sparkConfigValue="sparkConfigValue";
     public static final String sparkConfigType="sparkConfigType";
+    public static final String CSV="CSV";
+    public static final String XML="XML";
+    public static final String JSON="JSON";
+    public static final String PARQUET="PARQUET";
+    public static final String AVRO="AVRO";
+    public static enum FILE_TYPE{
+        CSV(1),FIXEDWIDTH(2),EDCDIC(3),JSON(3),XML(4);
+        private final int code;
+        FILE_TYPE(int code) {
+            this.code = code;
+        }
+    }
 }

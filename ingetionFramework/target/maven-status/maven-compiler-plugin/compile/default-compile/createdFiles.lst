@@ -1,1 +1,5 @@
+com\capgemini\commons\MetaConfigConst$FILE_TYPE.class
+com\capgemini\spark\input\FileInputSource.class
 com\capgemini\ingestionServiceRunner.class
+com\capgemini\spark\output\FileOutput.class
+com\capgemini\spark\input\InputSource.class
