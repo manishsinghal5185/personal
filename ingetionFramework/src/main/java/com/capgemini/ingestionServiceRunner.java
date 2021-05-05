@@ -35,22 +35,22 @@ public class ingestionServiceRunner {
         buildIngestionRequest(IR,configNode,parseParameters(paramStr));
         System.out.println("ingestionRequestObject is:"+m.writerWithDefaultPrettyPrinter().writeValueAsString(IR));
         //new readFiles().reader(IR);
-//        String sparkAppName=IR.getAppName();
-//        SparkSession spark=SparkSession
-//                .builder()
-//                .appName(sparkAppName)
-//                .enableHiveSupport()
-//                .config("spark.sql.hive.convertMetastoreParquet",false)
-//                .getOrCreate();
-//        for(dsFileRequest dsfile:IR.getDsFiles()) {
-//            InputSource<Row> is = new FileInputSource(dsfile);
-//            is.createDataset(IR,spark);
-//        }
-//
-//        for(dataTarget dt: IR.getDataTargets()){
-//            SparkExport out=new FileOutput(dt);
-//            out.writeDataset(IR,spark);
-//        }
+        String sparkAppName=IR.getAppName();
+        SparkSession spark=SparkSession
+                .builder()
+                .appName(sparkAppName)
+                .enableHiveSupport()
+                .config("spark.sql.hive.convertMetastoreParquet",false)
+                .getOrCreate();
+        for(dsFileRequest dsfile:IR.getDsFiles()) {
+            InputSource<Row> is = new FileInputSource(dsfile);
+            is.createDataset(IR,spark);
+        }
+
+        for(dataTarget dt: IR.getDataTargets()){
+            SparkExport out=new FileOutput(dt);
+            out.writeDataset(IR,spark);
+        }
 
     }
     public static CommandLine commandLineParse(String[] args) throws ParseException {
@@ -60,7 +60,7 @@ public class ingestionServiceRunner {
         return new BasicParser().parse(options,args);
 
     }
-    protected static List<Map<String,String>> parseParameters(String parameters){
+    public static List<Map<String,String>> parseParameters(String parameters){
         List<Map<String,String>> ret=new ArrayList<>();
         if (null!=parameters){
             String[] parList=parameters.split(PARAM_DELIM);
@@ -145,7 +145,7 @@ public class ingestionServiceRunner {
                     dsFile.setDsFileName(MetaConfigConst.FILE_TYPE.CSV.toString());
                 }
                 dsFile.setDsSchemaFileName(dsFileNode.path(MetaConfigConst.dsSchemaFileName).asText());
-                dsFile.setHeader(dsFileNode.path(MetaConfigConst.headers).asBoolean());
+                dsFile.setHeader(dsFileNode.path(MetaConfigConst.isHeader).asBoolean());
                 dsFileRequests.add(dsFile);
             }
             ir.setDsFiles(dsFileRequests);
@@ -216,7 +216,7 @@ public class ingestionServiceRunner {
 
     }
 
-    protected static JsonNode readFromFiles(String configFileName) throws IOException {
+    public static JsonNode readFromFiles(String configFileName) throws IOException {
         ObjectMapper m= new ObjectMapper();
         File configFile= new File(configFileName);
         JsonNode ret=m.readTree(configFile);

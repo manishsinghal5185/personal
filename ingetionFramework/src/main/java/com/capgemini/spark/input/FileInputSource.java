@@ -21,6 +21,7 @@ public class FileInputSource implements InputSource<Row> {
         Dataset<Row> df;
         switch (dsFile.getDsFileType().toUpperCase(Locale.ROOT)){
             case MetaConfigConst.CSV:
+                log.info("Reading from source file");
                 df=getDSFromTextFile(dsFile,spark);
                 break;
             default:
@@ -39,16 +40,24 @@ public class FileInputSource implements InputSource<Row> {
     }
 
     private Dataset<Row> getDSFromTextFile(dsFileRequest dsFile, SparkSession spark) throws Exception {
-        DataFrameReader dfr=spark.read();
+
+        DataFrameReader dataFrameReader=spark.read();
         if (dsFile.getDsSchemaFileName()==null || dsFile.getDsSchemaFileName().isEmpty()){
-            if (dsFile.isHeader())
-            dfr.option("inferSchema","true").option("header","true");
-        }else {
-            throw new Exception("No Schema or Header is provided for file "+dsFile.getDsFileName());
+            log.info("Setting spark options to inferschema");
+            if (dsFile.isHeader()) {
+                log.info("using header to infer column name");
+                dataFrameReader.option("inferSchema", "true").option("header", "true");
+            }else {
+                throw new Exception("No Schema or Header is provided for file " + dsFile.getDsFileName());
+            }
+
         }
-        if (dsFile.getDsFileDelimiter()!=null)
-            dfr.option("delimiter",dsFile.getDsFileDelimiter());
-        return dfr.csv(dsFile.getDsFileName());
+        if (dsFile.getDsFileDelimiter()!=null) {
+            log.info("delimiter is:{}", dsFile.getDsFileDelimiter());
+            dataFrameReader.option("delimiter", dsFile.getDsFileDelimiter());
+        }
+        //spark.read().option("inferSchema", "true").option("header", "true").option("delimiter", dsFile.getDsFileDelimiter()).csv(dsFile.getDsFileName()).printSchema();
+        return dataFrameReader.csv(dsFile.getDsFileName());
     }
 
 }

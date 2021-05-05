@@ -30,8 +30,9 @@ public class FileOutput implements SparkExport{
                 dfw.option("header", "true");
             dfw.csv(targetLoc);
         }
-        if(!target.getPartiton().isEmpty()) {
+        if(target.getPartiton()!=null &&!target.getPartiton().isEmpty()) {
             String parKey = target.getPartiton().stream().map(n -> String.valueOf(n)).collect(Collectors.joining(","));
+            log.info("Partitioning data using:{}",parKey);
             dfw.partitionBy(parKey);
         }
         if (MetaConfigConst.PARQUET.equalsIgnoreCase(target.getResultFormat()))
