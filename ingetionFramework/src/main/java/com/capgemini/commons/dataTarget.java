@@ -10,7 +10,7 @@ public class dataTarget {
     private boolean headers;
     private Boolean overwriteFlag;
     private String stagingLocation;
-    private List<String> partiton;
+    private String[] partition;
 
     public String getTargetName() {
         return targetName;
@@ -68,11 +68,11 @@ public class dataTarget {
         this.stagingLocation = stagingLocation;
     }
 
-    public List<String> getPartiton() {
-        return partiton;
+    public String[] getPartition() {
+        return partition;
     }
 
-    public void setPartiton(List<String> partiton) {
-        this.partiton = partiton;
+    public void setPartition(String[] partition) {
+        this.partition = partition;
     }
 }

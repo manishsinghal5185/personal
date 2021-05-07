@@ -36,7 +36,7 @@ public class MetaConfigConst {
     public static final String headers="headers";
     public static final String overwriteFlag="overwriteFlag";
     public static final String stagingLocation="stagingLocation";
-    public static final String partitons="partitons";
+    public static final String partition ="partition";
     public static final String sparkConfigParams="sparkConfigParams";
     public static final String sparkConfigName="sparkConfigName";
     public static final String sparkConfigValue="sparkConfigValue";

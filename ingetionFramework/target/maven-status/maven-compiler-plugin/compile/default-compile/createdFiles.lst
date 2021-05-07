@@ -3,7 +3,9 @@ com\capgemini\commons\MetaConfigConst.class
 com\capgemini\commons\dsQueryRequest.class
 com\capgemini\commons\MetaConfigConst$FILE_TYPE.class
 com\capgemini\spark\input\FileInputSource.class
+com\capgemini\commons\CalendarUtil.class
 com\capgemini\commons\dsControlFileRequest.class
+com\capgemini\spark\input\queryInputSource.class
 com\capgemini\ingestionServiceRunner.class
 com\capgemini\spark\output\FileOutput.class
 com\capgemini\spark\output\SparkExport.class

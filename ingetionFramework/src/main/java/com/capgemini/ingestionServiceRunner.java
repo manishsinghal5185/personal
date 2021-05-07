@@ -170,15 +170,15 @@ public class ingestionServiceRunner {
             ir.setDsQueries(dsQueryRequests);
         }
         //staging
-        ir.setStagingLoc(stagingNode.path(MetaConfigConst.stagingLocation).asText());
-        JsonNode partitonNode=stagingNode.path(MetaConfigConst.partitons);
-        if(!partitonNode.isMissingNode() && partitonNode.isArray() && partitonNode.size()>0){
-            List<String> patitions=new ArrayList<>();
-            for (JsonNode par:partitonNode){
-                patitions.add(par.asText());
-            }
-            ir.setStagingPartitions(patitions);
-        }
+//        ir.setStagingLoc(stagingNode.path(MetaConfigConst.stagingLocation).asText());
+//        JsonNode partitonNode=stagingNode.path(MetaConfigConst.partitons);
+//        if(!partitonNode.isMissingNode() && partitonNode.isArray() && partitonNode.size()>0){
+//            List<String> patitions=new ArrayList<>();
+//            for (JsonNode par:partitonNode){
+//                patitions.add(par.asText());
+//            }
+//            ir.setStagingPartitions(patitions);
+//        }
         //dstargets
         List<dataTarget> targets=new ArrayList<>();
         if(!dataTargetNode.isMissingNode() && dataTargetNode.isArray() && dataTargetNode.size()>0){
@@ -187,18 +187,18 @@ public class ingestionServiceRunner {
                 target.setDataFrameName(targetNode.path(MetaConfigConst.dataFrameName).asText());
                 target.setHeaders(targetNode.path(MetaConfigConst.headers).asBoolean());
                 target.setOverwriteFlag(targetNode.path(MetaConfigConst.overwriteFlag).asBoolean());
-                JsonNode tgtPartitonNode=targetNode.path(MetaConfigConst.partitons);
-                if(!tgtPartitonNode.isMissingNode() && tgtPartitonNode.isArray() && tgtPartitonNode.size()>0){
-                    List<String> patitions=new ArrayList<>();
-                    for (JsonNode par:partitonNode){
-                        patitions.add(par.asText());
+                JsonNode tgtPartitonNode=targetNode.path(MetaConfigConst.partition);
+                if(!tgtPartitonNode.isMissingNode()){
+                    if (tgtPartitonNode.asText()!=null && !tgtPartitonNode.asText().trim().isEmpty()) {
+                        String[] patitions = tgtPartitonNode.asText().split("\\,");
+                        target.setPartition(patitions);
                     }
-                   target.setPartiton(patitions);
                 }
                 target.setResultFormat(targetNode.path(MetaConfigConst.resutFormat).asText());
                 //set staging loc
                 String targetTableName=targetNode.path(MetaConfigConst.targetTableName).asText().trim();
-                String stagingLoc=targetNode.path(MetaConfigConst.stagingLocation).asText().trim().replaceAll("([^/])$","$1/")+targetTableName;
+                String targetTableNameWithoutSchema=targetTableName.substring(targetTableName.lastIndexOf(".")+1);
+                String stagingLoc=targetNode.path(MetaConfigConst.stagingLocation).asText().trim().replaceAll("([^/])$","$1/")+targetTableNameWithoutSchema;
                 target.setStagingLocation(stagingLoc);
                 target.setTargetName(targetNode.path(MetaConfigConst.targetName).asText());
                 target.setTargetTableName(targetTableName);

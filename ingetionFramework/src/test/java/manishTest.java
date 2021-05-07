@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
+import org.apache.ivy.util.StringUtils;
 import org.junit.Test;
 import py4j.StringUtil;
 import com.capgemini.ingestionServiceRunner;
@@ -29,10 +30,21 @@ public class manishTest {
         ingestionRequest IR = new ingestionRequest();
         ingestionServiceRunner.buildIngestionRequest(IR, configNode, ingestionServiceRunner.parseParameters(paramStr));
         System.out.println("ingestionRequestObject is:" + m.writerWithDefaultPrettyPrinter().writeValueAsString(IR));
-        dsFileRequest dsFile = IR.getDsFiles().get(0);
-        if (dsFile.getDsSchemaFileName() == null || dsFile.getDsSchemaFileName().trim().isEmpty()) {
-            System.out.println("null schema");
-        }else
-            System.out.println("not null schema");
+//        dsFileRequest dsFile = IR.getDsFiles().get(0);
+//        if (dsFile.getDsSchemaFileName() == null || dsFile.getDsSchemaFileName().trim().isEmpty()) {
+//            System.out.println("null schema");
+//        }else
+//            System.out.println("not null schema");
+        String[] partCols=IR.getDataTargets().get(1).getPartition();
+              if (partCols==null) {
+                  partCols=new String[]{""};
+                  System.out.println(Arrays.asList(partCols).contains("mann"));
+              }
+    }
+    @Test
+    public void sample(){
+        String partCol="id,name";
+        String[] partCols=partCol.split("\\,");
+        System.out.println(StringUtils.join(partCols,","));
     }
 }
