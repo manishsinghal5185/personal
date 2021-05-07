@@ -4,9 +4,11 @@ import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import static org.apache.spark.sql.functions.lit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.apache.hadoop.fs.Path;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -14,10 +16,18 @@ import java.util.Map;
 public class FileInputSource implements InputSource<Row> {
 
     private static final Logger log= LoggerFactory.getLogger(FileInputSource.class);
-    private dsFileRequest dsFile;
-    public FileInputSource(dsFileRequest dsFile){this.dsFile=dsFile;}
+    private List<dsFileRequest> dsFiles;
     @Override
-    public Dataset<Row> createDataset(ingestionRequest ir, SparkSession spark) throws Exception {
+    public void createDataset(ingestionRequest ir, SparkSession spark) throws Exception {
+        dsFiles=ir.getDsFiles();
+        for(dsFileRequest dsFile:dsFiles) {
+            Dataset<Row> df=createDataSetForOneFile(dsFile,spark);
+            String tmpTableName=dsFile.getDataFrameName();
+            createDatasetTempTable(df,tmpTableName);
+        }
+
+    }
+    private Dataset<Row> createDataSetForOneFile(dsFileRequest dsFile, SparkSession spark) throws Exception {
         Dataset<Row> df;
         switch (dsFile.getDsFileType().toUpperCase(Locale.ROOT)){
             case MetaConfigConst.CSV:
@@ -27,12 +37,11 @@ public class FileInputSource implements InputSource<Row> {
             default:
                 throw new Exception("input File type value can only be csv");
         }
-        createDatasetTempTable(df);
         return df;
     }
+
     @Override
-    public String createDatasetTempTable(Dataset<Row> df) throws Exception{
-        String tmpTableName=dsFile.getDataFrameName();
+    public String createDatasetTempTable(Dataset<Row> df,String tmpTableName) throws Exception{
         log.info("creating dataFrame as:{}",tmpTableName);
         if (tmpTableName!=null)
             df.createOrReplaceTempView(tmpTableName);
@@ -40,7 +49,7 @@ public class FileInputSource implements InputSource<Row> {
     }
 
     private Dataset<Row> getDSFromTextFile(dsFileRequest dsFile, SparkSession spark) throws Exception {
-
+        Dataset<Row> df;
         DataFrameReader dataFrameReader=spark.read();
         if (dsFile.getDsSchemaFileName()==null || dsFile.getDsSchemaFileName().isEmpty()){
             log.info("Setting spark options to inferschema");
@@ -57,7 +66,14 @@ public class FileInputSource implements InputSource<Row> {
             dataFrameReader.option("delimiter", dsFile.getDsFileDelimiter());
         }
         //spark.read().option("inferSchema", "true").option("header", "true").option("delimiter", dsFile.getDsFileDelimiter()).csv(dsFile.getDsFileName()).printSchema();
-        return dataFrameReader.csv(dsFile.getDsFileName());
+        Path srcPath=new Path(dsFile.getDsFileName());
+        df=dataFrameReader.csv(dsFile.getDsFileName());
+        //add pseudo coloumns to input file
+        df=df.withColumn(MetaConfigConst.ds_filename,lit(srcPath.getName()));
+        df=df.withColumn(MetaConfigConst.loading_dt,lit(CalendarUtil.calcCalendarCurrentDay()));
+        return df;
     }
+
+
 
 }

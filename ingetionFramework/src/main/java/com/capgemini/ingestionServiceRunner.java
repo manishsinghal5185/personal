@@ -42,11 +42,17 @@ public class ingestionServiceRunner {
                 .enableHiveSupport()
                 .config("spark.sql.hive.convertMetastoreParquet",false)
                 .getOrCreate();
-        for(dsFileRequest dsfile:IR.getDsFiles()) {
-            InputSource<Row> is = new FileInputSource(dsfile);
-            is.createDataset(IR,spark);
+        //create dataframe for each input
+        InputSource<Row> is ;
+        if (!IR.getDsFiles().isEmpty()) {
+            is = new FileInputSource();
+            is.createDataset(IR, spark);
         }
-
+        //Create dataframe for each query
+        if (!IR.getDsQueries().isEmpty()) {
+            is = new queryInputSource();
+            is.createDataset(IR, spark);
+        }
         for(dataTarget dt: IR.getDataTargets()){
             SparkExport out=new FileOutput(dt);
             out.writeDataset(IR,spark);
@@ -154,9 +160,9 @@ public class ingestionServiceRunner {
         if (!dsQueriesNode.isMissingNode()){
             List <dsQueryRequest> dsQueryRequests=new ArrayList<>();
             for (JsonNode dsQueryNodeObj:dsQueriesNode){
-                JsonNode dsQueryNode=dsQueryNodeObj.path(MetaConfigConst.dbQuery);
+                JsonNode dsQueryNode=dsQueryNodeObj.path(MetaConfigConst.dsQuery);
                 dsQueryRequest dsQuery=new dsQueryRequest();
-                dsQuery.setDataFrameNam(dsQueryNode.path(MetaConfigConst.dataFrameName).asText());
+                dsQuery.setDataFrameName(dsQueryNode.path(MetaConfigConst.dataFrameName).asText());
                 dsQuery.setDsQueryName(dsQueryNode.path(MetaConfigConst.dsQueryName).asText());
                 dsQuery.setRawSql(dsQueryNode.path(MetaConfigConst.rawSql).asText());
                 dsQueryRequests.add(dsQuery);

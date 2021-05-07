@@ -46,6 +46,8 @@ public class MetaConfigConst {
     public static final String JSON="JSON";
     public static final String PARQUET="PARQUET";
     public static final String AVRO="AVRO";
+    public static final String ds_filename="ds_filename";
+    public static final String loading_dt="loading_dt";
     public static enum FILE_TYPE{
         CSV(1),FIXEDWIDTH(2),EDCDIC(3),JSON(3),XML(4);
         private final int code;

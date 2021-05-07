@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface InputSource<T> {
-    Dataset<T> createDataset(ingestionRequest ir, SparkSession spark)
+    void createDataset(ingestionRequest ir, SparkSession spark)
         throws Exception;
-    String createDatasetTempTable( Dataset<T> df)
+    String createDatasetTempTable( Dataset<T> df,String tmpTableName)
             throws Exception;
 
 }
