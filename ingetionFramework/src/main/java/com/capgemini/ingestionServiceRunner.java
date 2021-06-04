@@ -26,13 +26,17 @@ public class ingestionServiceRunner {
         String paramStr=commandLine.getOptionValue('p');
         String envStr=commandLine.getOptionValue('e');
         String configFileName=commandLine.getOptionValue('f');
+        String jobId=commandLine.getOptionValue('i');
+        String runId=commandLine.getOptionValue('r');
+        String jobName=commandLine.getOptionValue('n');
+        String restLink=commandLine.getOptionValue('l');
         log.info("==========ENV:{}",envStr);
         log.info("JSON configuration passed is:{}",configFileName);
         log.info("parameters passed is:{}",paramStr);
         ObjectMapper m= new ObjectMapper();
         JsonNode configNode=readFromFiles(configFileName);
         ingestionRequest IR= new ingestionRequest();
-        buildIngestionRequest(IR,configNode,parseParameters(paramStr));
+        buildIngestionRequest(IR,configNode,parseParameters(paramStr),jobId,runId,jobName,restLink);
         System.out.println("ingestionRequestObject is:"+m.writerWithDefaultPrettyPrinter().writeValueAsString(IR));
         //new readFiles().reader(IR);
         String sparkAppName=IR.getAppName();
@@ -44,12 +48,12 @@ public class ingestionServiceRunner {
                 .getOrCreate();
         //create dataframe for each input
         InputSource<Row> is ;
-        if (!IR.getDsFiles().isEmpty()) {
+        if (IR.getDsFiles()!=null && !IR.getDsFiles().isEmpty()) {
             is = new FileInputSource();
             is.createDataset(IR, spark);
         }
         //Create dataframe for each query
-        if (!IR.getDsQueries().isEmpty()) {
+        if (IR.getDsQueries()!=null && !IR.getDsQueries().isEmpty()) {
             is = new queryInputSource();
             is.createDataset(IR, spark);
         }
@@ -62,7 +66,11 @@ public class ingestionServiceRunner {
     public static CommandLine commandLineParse(String[] args) throws ParseException {
         Options options = new Options().addOption("f", "configFile",true,"Json Configuration Files")
                 .addOption("p","parameters",true,"parameters")
-                .addOption("e","env",true,"running enviornment");
+                .addOption("e","env",true,"running enviornment")
+                .addOption("l","link",true,"audit rest api link")
+                .addOption("i","jobId",true,"job id")
+                .addOption("r","runId",true,"run id")
+                .addOption("n","jobName",true,"job name");
         return new BasicParser().parse(options,args);
 
     }
@@ -90,7 +98,11 @@ public class ingestionServiceRunner {
         return ret;
     }
 
-    public static void buildIngestionRequest(ingestionRequest ir, JsonNode configNode,List<Map<String,String>> parameters) {
+    public static void buildIngestionRequest(ingestionRequest ir, JsonNode configNode,List<Map<String,String>> parameters,String jobId,String runId,String jobName,String restLink) {
+        ir.setJobId(jobId);
+        ir.setJobName(jobName);
+        ir.setRunId(runId);
+        ir.setRestLink(restLink);
         String appName=configNode.path(MetaConfigConst.appName).asText();
         String sor=configNode.path(MetaConfigConst.sor).asText();
         String appId=configNode.path(MetaConfigConst.appId).asText();
@@ -194,7 +206,7 @@ public class ingestionServiceRunner {
                         target.setPartition(patitions);
                     }
                 }
-                target.setResultFormat(targetNode.path(MetaConfigConst.resutFormat).asText());
+                target.setResultFormat(targetNode.path(MetaConfigConst.resultFormat).asText());
                 //set staging loc
                 String targetTableName=targetNode.path(MetaConfigConst.targetTableName).asText().trim();
                 String targetTableNameWithoutSchema=targetTableName.substring(targetTableName.lastIndexOf(".")+1);

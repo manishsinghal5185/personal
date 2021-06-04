@@ -73,7 +73,4 @@ public class FileInputSource implements InputSource<Row> {
         df=df.withColumn(MetaConfigConst.loading_dt,lit(CalendarUtil.calcCalendarCurrentDay()));
         return df;
     }
-
-
-
 }

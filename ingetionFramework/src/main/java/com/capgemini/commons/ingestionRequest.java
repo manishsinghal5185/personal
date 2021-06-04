@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 public class ingestionRequest {
+    private String jobId;
+    private String runId;
+    private String jobName;
+    private String restLink;
     private String appName;
     private String sor;
     private String appId;
@@ -17,6 +21,38 @@ public class ingestionRequest {
     private List <String> stagingPartitions;
     private List <sparkConfigParam>  sparkConfigParams;
     private List<Map<String,String>> cmdLineParameters;
+
+    public String getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
+    }
+
+    public String getRunId() {
+        return runId;
+    }
+
+    public void setRunId(String runId) {
+        this.runId = runId;
+    }
+
+    public String getJobName() {
+        return jobName;
+    }
+
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
+    }
+
+    public String getRestLink() {
+        return restLink;
+    }
+
+    public void setRestLink(String restLink) {
+        this.restLink = restLink;
+    }
 
     public List<sparkConfigParam> getSparkConfigParams() {
         return sparkConfigParams;

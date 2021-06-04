@@ -31,7 +31,7 @@ public class MetaConfigConst {
     public static final String dataTarget="dataTarget";
     public static final String dataTargets="dataTargets";
     public static final String targetName="targetName";
-    public static final String resutFormat="resutFormat";
+    public static final String resultFormat ="resultFormat";
     public static final String targetTableName="targetTableName";
     public static final String headers="headers";
     public static final String overwriteFlag="overwriteFlag";
