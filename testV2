@@ -1,0 +1,137 @@
+import pyautogui
+import time
+import random
+import sys
+import platform
+
+MAX_CYCLES = int(8 * 60 / ((10 + 30) / 2))
+WORK_QUERIES = [
+    "project status update",
+    "Q3 financial reports",
+    "cloud security best practices",
+    "Agile project timeline documentation",
+    "Performance review best practices",
+    "Company annual goals summary",
+    "Client onboarding checklist",
+    "Data privacy regulations 2025",
+    "Remote work security guidelines",
+    "Weekly team meeting notes"
+]
+DOCUMENT_SENTENCES = [
+    "Reviewing quarterly goals.",
+    "Need to follow up on the client meeting schedule.",
+    "Documenting next steps for project Alpha.",
+    "Summarizing team tasks and deadlines.",
+    "Updating budget forecast for Q4.",
+    "Preparing slides for executive review tomorrow.",
+    "Noting action items from marketing sync-up.",
+    "Compiling development progress updates.",
+    "Drafting email for department status.",
+    "Listing unresolved issues for IT."
+]
+BROWSERS_WIN = ["chrome", "firefox", "msedge"]
+BROWSERS_MAC = ["chrome", "firefox", "Safari"]
+EDITORS_WIN = ["notepad", "wordpad"]
+EDITORS_MAC = ["TextEdit"]  # Extend with other editors if desired
+
+def random_typing(text):
+    for char in text:
+        pyautogui.typewrite(char)
+        time.sleep(random.uniform(0.05, 0.1))
+
+def open_application(app_name, is_mac=False):
+    if is_mac:
+        pyautogui.hotkey('command', 'space')
+        time.sleep(random.uniform(0.6, 1.4))
+        pyautogui.typewrite(app_name + '\n')
+    else:
+        pyautogui.hotkey('win', 'r')
+        time.sleep(random.uniform(0.6, 1.4))
+        pyautogui.typewrite(app_name + '\n')
+    time.sleep(random.uniform(4, 6))
+
+def close_application(is_mac=False):
+    if is_mac:
+        pyautogui.hotkey('command', 'w')
+    else:
+        pyautogui.hotkey('alt', 'f4')
+    time.sleep(random.uniform(1, 2))
+
+def simulate_browser():
+    current_os = platform.system()
+    is_mac = current_os == "Darwin"
+    browsers = BROWSERS_MAC if is_mac else BROWSERS_WIN
+    app = random.choice(browsers)
+    open_application(app, is_mac)
+    pyautogui.typewrite('https://www.google.com/search?q=google.com\n')
+    time.sleep(random.uniform(5, 7))
+    time.sleep(random.uniform(60, 90))
+    search_query = random.choice(WORK_QUERIES)
+    pyautogui.typewrite(search_query + '\n')
+    time.sleep(random.uniform(30, 60))
+    close_application(is_mac)
+
+def simulate_document():
+    current_os = platform.system()
+    is_mac = current_os == "Darwin"
+    editors = EDITORS_MAC if is_mac else EDITORS_WIN
+    app = random.choice(editors)
+    open_application(app, is_mac)
+    for sentence in random.sample(DOCUMENT_SENTENCES, k=random.randint(2, 4)):
+        random_typing(sentence)
+        pyautogui.press('enter')
+    time.sleep(random.uniform(60, 120))
+    close_application(is_mac)
+    # Handle save prompt: send Don't Save/No
+    if not is_mac:
+        pyautogui.press('left')
+        pyautogui.press('enter')
+    else:
+        pyautogui.press('right')
+        pyautogui.press('enter')
+    time.sleep(random.uniform(1, 2))
+
+def simulate_mouse_moves():
+    for _ in range(random.randint(1, 3)):
+        x = random.randint(400, 1200)
+        y = random.randint(200, 800)
+        duration = random.uniform(0.5, 2)
+        pyautogui.moveTo(x, y, duration)
+        time.sleep(random.uniform(1, 6))
+
+def main():
+    start_time = time.time()
+    cycle = 0
+    workflow_blocks = [
+        simulate_browser,
+        simulate_document,
+        simulate_mouse_moves,
+    ]
+    try:
+        while True:
+            if cycle >= MAX_CYCLES or (time.time() - start_time) > 60 * 60 * 8:
+                print("Finished 8 hours or maximum cycles reached. Exiting.")
+                break
+            print(f"Starting cycle {cycle + 1}")
+
+            # Randomly select which workflows to do and in what order
+            this_cycle_blocks = random.sample(workflow_blocks, k=random.randint(1, len(workflow_blocks)))
+            random.shuffle(this_cycle_blocks)  # Shuffle in place for unpredictability
+
+            for workflow in this_cycle_blocks:
+                # Small random pause between workflows
+                time.sleep(random.uniform(5, 20))
+                workflow()
+                
+            wait_time = random.uniform(10*60, 30*60)
+            print(f"Cycle {cycle + 1} complete. Waiting {int(wait_time/60)} minutes.")
+            time.sleep(wait_time)
+            cycle += 1
+
+    except KeyboardInterrupt:
+        print("Script interrupted safely by user. Exiting.")
+    except Exception as e:
+        print(f"Error: {e}")
+
+if __name__ == "__main__":
+    main()
